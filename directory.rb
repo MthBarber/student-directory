@@ -94,9 +94,12 @@ def save_students
   end
 end
 
-def load_students()
-  puts "Please enter a file name including its type"
-  filename = STDIN.gets.chomp
+def load_students(filename)
+  if filename.nil?
+    puts "Please enter a file name including its type"
+    filename = STDIN.gets.chomp
+  end
+  
   if File.exist?(filename)
     file = File.open(filename, "r")
     file.readlines.each do |line|

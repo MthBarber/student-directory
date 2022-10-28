@@ -101,12 +101,11 @@ def load_students(filename)
   end
   
   if File.exist?(filename)
-    file = File.open(filename, "r")
-    file.readlines.each do |line|
+    File.open(filename, "r").each do |line|
       name,cohort = line.chomp.split(',')
       push_to_students_array(name, cohort, "load")
     end
-    file.close
+    
   else
     puts "Sorry, #{filename} doesn't exist."
     exit # quit the program

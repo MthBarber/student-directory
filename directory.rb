@@ -28,7 +28,7 @@ def input_students
   name = STDIN.gets.chomp
   #while the name is not empty, repeat this code
   while !name.empty? do
-    @students << {name: name, cohort: :november}
+    push_to_students_array(name, cohort = :november, "input")
     puts "Now we have #{@students.count} students"
     #get another name from the user
     name = STDIN.gets.chomp
@@ -51,17 +51,21 @@ def show_students
   print_footer(@students)
 end
 
-def process(selection)
+def main_menu(selection)
   case selection
     when "1"
+      puts "You chose to add more students"
       input_students
       #input the students
     when "2"
+      puts "You chose to view all current students"
       show_students
       # show the students
     when "3"
+      puts "You chose to save the current list"
       save_students
     when "4"
+      puts "Please choose a file to load"
       load_students
     when "9"
       exit # This will cause the program to terminate
@@ -82,13 +86,20 @@ def save_students
   file.close
 end
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name,cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+def load_students()
+  puts "Please enter a file name including its type"
+  filename = STDIN.gets.chomp
+  if File.exist?(filename)
+    file = File.open(filename, "r")
+    file.readlines.each do |line|
+      name,cohort = line.chomp.split(',')
+      push_to_students_array(name, cohort, "load")
+    end
+    file.close
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit # quit the program
   end
-  file.close
 end
 
 def try_load_students
@@ -106,7 +117,15 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(STDIN.gets.chomp)
+    main_menu(STDIN.gets.chomp)
+  end
+end
+
+def push_to_students_array(name, cohort, method)
+  if (method == "load")
+    @students << {name: name, cohort: cohort.to_sym}
+  elsif (method == "input")
+    @students << {name: name, cohort: cohort}  
   end
 end
 
